@@ -1,18 +1,11 @@
-from graph import graph
-from langchain_core.messages import HumanMessage
+import os
+from dotenv import load_dotenv
+from langchain_groq import ChatGroq
 
+load_dotenv()
 
-def chat_with_ai(message):
-
-    result = graph.invoke(
-        {
-            "messages":[
-                HumanMessage(
-                    content=message
-                )
-            ]
-        }
-    )
-
-
-    return result["messages"][-1].content
+llm = ChatGroq(
+    model="openai/gpt-oss-20b",
+    temperature=0,
+    groq_api_key=os.getenv("GROQ_API_KEY")
+)

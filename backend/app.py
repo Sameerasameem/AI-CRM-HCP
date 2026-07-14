@@ -1,24 +1,38 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from agent import chat_with_ai
+from langchain_core.messages import HumanMessage
+
+from graph import graph
 
 app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
+
 class ChatRequest(BaseModel):
     message: str
 
+
 @app.get("/")
 def home():
-    return {"message": "AI CRM Backend Running Successfully!"}
+    return {
+        "message": "AI CRM Backend Running Successfully"
+    }
+
 
 @app.post("/chat")
 def chat(request: ChatRequest):
-    reply = chat_with_ai(request.message)
-    return {"reply": reply}
+
+    result = graph.invoke(
+        {
+            "messages": [
+                HumanMessage(content=request.message)
+            ]
+        }
+    )
+
+    print(result)
+
+    final_message = result["messages"][-1]
+
+    return {
+        "response": getattr(final_message, "content", str(final_message))
+    }
