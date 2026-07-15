@@ -38,8 +38,8 @@ function App() {
 
     const data = await response.json();
 
-    dispatch(setReply(data.reply));
-    alert(data.reply);
+    dispatch(setReply(data.response));
+    alert(data.response );
   };
 
   const sendMessage = async () => {
@@ -55,7 +55,7 @@ function App() {
 
     const data = await response.json();
 
-    dispatch(setReply(data.reply));
+    dispatch(setReply(data.response));
   };
 
   return (
